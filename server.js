@@ -11,10 +11,12 @@ app.get("/api/data", function (req, res) {
   res.json(Data);
 });
 
+// /api/productName?,,,?,,,?,,?
 app.get('/api/search', (req, res) => {
   const { searchTerm, selectedOption } = req.query;
   let filteredProducts = [];
 
+  // filteredProducts = Data.filter((product) => product.productName.includes(serarch) || product.scrumMasterName.includes(serarch) || )
   if (selectedOption === 'productName') {
     filteredProducts = Data.filter((product) =>
       product.productName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -36,12 +38,12 @@ app.get('/api/search', (req, res) => {
   res.send(filteredProducts);
 });
 
-
+// TODO: validation 둘 다 체크.. 최소 3중으로..! (프론트, 백, 데이터베이스)
 app.post("/api/create", (req, res) => {
   const formData = req.body;
 
   const newProduct = {
-    productId: Data[Data.length - 1].productId + 1,
+    productId: Data[Data.length - 1].productId + 1, // 아예 처음이라면?
     productName: formData.productName,
     productOwnerName: formData.productOwnerName,
     Developers: formData.Developers,
@@ -54,10 +56,13 @@ app.post("/api/create", (req, res) => {
   res.send("Data received");
 });
 
+// TODO: put/patch 미세한 차이가 있다.
+// TODO: status 코드
 app.put("/api/update/:id", (req, res) => {
   const { productId, ...updatedProduct } = req.body;
   console.log(updatedProduct);
 
+  // 왜 싫어? ,,, 추측하지말라.. 204.. 데이터 없음..?
   const productIndex = Data.findIndex((data) => data.productId == productId);
   if (productIndex === -1) {
     res.status(404).send("Product not found");
@@ -70,7 +75,7 @@ app.put("/api/update/:id", (req, res) => {
     ...updatedProduct,
   };
 
-  res.json({ message: "Data updated" });
+  res.json({ message: "Data updated" })
 });
 
 app.delete("/api/delete/:id", (req, res) => {
